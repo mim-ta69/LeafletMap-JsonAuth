@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet Map</title>
+    <!---------- Main styles ---------->
+    <link rel="stylesheet" href="style02.css" />
+
+    <!---------- Leaflet Js and Css(CDNs) ---------->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <!---------- Leaflet Draw Plugin(CDNs) ---------->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+  </head>
+  <body>
+    <div id="map">
+      <div class="leaflet-control cordinate"></div>
+    </div>
+    <button id="exportButton">Export to GeoJSON</button>
+  </body>
+
+  <script>
+    //================== Map Initialization ==================//
+    var map = L.map("map").setView([31.0461, 34.8516], 7);
+
+    // google streets
+    googleStreets = L.tileLayer(
+      "http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}",
+      {
+        maxZoom: 20,
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      }
+    );
+
+    //google hybrid
+    googleHybrid = L.tileLayer(
+      "http://{s}.google.com/vt?lyrs=s,h&x={x}&y={y}&z={z}",
+      {
+        maxZoom: 20,
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      }
+    );
+
+    //google satellite
+    googleSat = L.tileLayer(
+      "http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",
+      {
+        maxZoom: 20,
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      }
+    );
+
+    // stadia-osm
+    var Stadia_OSMBright = L.tileLayer(
+      "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}",
+      {
+        minZoom: 0,
+        maxZoom: 20,
+        attribution:
+          '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: "png",
+      }
+    );
+    Stadia_OSMBright.addTo(map);
+
+    // world imagery
+    var Esri_WorldImagery = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution:
+          "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+      }
+    );
+
+    //================== Markers ==================//
+    var myIcon = L.icon({
+      iconUrl: "icons/red_location.png",
+      iconSize: [30, 30],
+    });
+    // Telaviv coordinate!!
+    var FirstMarker = L.marker([32.0853, 34.7818], {
+      icon: myIcon,
+      draggable: true,
+    });
+    FirstMarker.addTo(map);
+
+    // Dimona coordinate!!
+    var SecendMarker = L.marker([31.0694, 35.0334], {
+      icon: myIcon,
+      draggable: true,
+    });
+    SecendMarker.addTo(map);
+
+    // Haifa coordinate!!
+    var ThirdMarker = L.marker([32.794, 34.9896], {
+      icon: myIcon,
+      draggable: true,
+    });
+    ThirdMarker.addTo(map);
+
+    // popup
+    var popup = FirstMarker.bindPopup(
+      "Main Target: " + FirstMarker.getLatLng()
+    );
+    popup.addTo(map);
+
+    var popup02 = SecendMarker.bindPopup("Target: " + SecendMarker.getLatLng());
+    popup02.addTo(map);
+
+    var popup03 = ThirdMarker.bindPopup("Target: " + ThirdMarker.getLatLng());
+    popup03.addTo(map);
+
+    //================== Leaflet Draw ==================//
+    var drawnFeatures = new L.FeatureGroup();
+    drawnFeatures.addTo(map);
+
+    var drawControl = new L.Control.Draw({
+      position: "bottomright",
+      edit: {
+        featureGroup: drawnFeatures,
+        remove: true,
+      },
+      draw: {
+        polygon: {
+          shapeOptions: {
+            color: "darkblue",
+          },
+          allowIntersection: true,
+          drawError: {
+            color: "orange",
+            timeout: 500,
+          },
+        },
+        polyline: {
+          shapeOptions: {
+            color: "darkred",
+          },
+        },
+        rectangle: {
+          shapeOptions: {
+            color: "darkgreen",
+          },
+        },
+        circle: {
+          shapeOptions: {
+            color: "steelblue",
+          },
+        },
+      },
+    });
+    // map.addControl(drawControl);
+    drawControl.addTo(map);
+
+    map.on("draw:created", function (e) {
+      var type = e.layerType;
+      var layer = e.layer;
+      console.log(layer.toGeoJSON());
+
+      //printing data on popup as geojson
+      layer.bindPopup(JSON.stringify(layer.toGeoJSON()));
+      drawnFeatures.addLayer(layer);
+    });
+
+    //================== Layer Groups and Layers Control ==================//
+    var baseMaps = {
+      Stadia_Osm: Stadia_OSMBright,
+      Google_StreetMap: googleStreets,
+      Google_Hybrid: googleHybrid,
+      Google_Satellite: googleSat,
+      Esri: Esri_WorldImagery,
+    };
+    var overlayMaps = {
+      Telaviv: FirstMarker,
+      Dimona: SecendMarker,
+      Haifa: ThirdMarker,
+    };
+    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    //================== Export button event listener ==================//
+    document
+      .getElementById("exportButton")
+      .addEventListener("click", function () {
+        var data = drawnFeatures.toGeoJSON();
+        var convertedData =
+          "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+
+        var downloadLink = document.createElement("a");
+        downloadLink.href = "data:" + convertedData;
+        downloadLink.download = "data.geojson";
+        downloadLink.click();
+      });
+
+    // =============== Leaflet Event| mouseover,... =============== //
+    // map.on("mouseover", function () {
+    //   console.log("ur mouse is over the map");
+    // });
+    map.on("mousemove", function (e) {
+      document.getElementsByClassName("cordinate")[0].innerHTML =
+        e.latlng.lat + " | " + e.latlng.lng;
+      // console.log("lat| " + e.latlng.lat + " lng| " + e.latlng.lng);
+    });
+  </script>
+</html>

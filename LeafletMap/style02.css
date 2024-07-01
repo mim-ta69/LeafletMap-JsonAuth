@@ -1,0 +1,58 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#map {
+    width: 100%;
+    height: 100vh;
+}
+
+.leaflet-right .leaflet-control {
+    /* margin-top: 100px !important; */
+    border: 2px solid rgb(66, 66, 66);
+    border-radius: 5px;
+}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+    box-shadow: 2px 2px 3px #888888 !important;
+}
+
+#exportButton {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 10px 20px;
+    background-color: #001730;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-style: italic;
+}
+
+#exportButton:hover {
+    background-color: #aad1fa;
+    color: #000000;
+    border: 1px solid black;
+}
+
+.cordinate {
+    position: absolute;
+    top: 95%;
+    left: 20px;
+    font-style: italic;
+    font-weight: bold;
+    font-size: small;
+}
+
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+    border: none !important;
+    background-clip: padding-box;
+}
