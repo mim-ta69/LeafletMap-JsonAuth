@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           if (data.accessToken) {
             console.log({ accessToken: data.accessToken });
             alert("ورود موفقیت‌آمیز بود!");
