@@ -16,13 +16,13 @@
 }
 
 body {
-  background-color: #f0f0f0;
+  background-color: #201b2c;
 }
 
 .container {
   max-width: 400px;
   margin: 50px auto;
-  background: white;
+  background: #2f2841;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -31,7 +31,9 @@ body {
 h2 {
   margin-bottom: 20px;
   font-family: DanaBold;
-  color: #313131;
+  color: #05ea81;
+  display: flex;
+  justify-content: center;
 }
 
 form {
@@ -42,35 +44,47 @@ form {
 input {
   margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #514869;
   border-radius: 5px;
+  background-color: #514869;
+  caret-color: rgb(198, 198, 198);
+  color: rgb(198, 198, 198);
 }
+
 input:focus {
   outline: none;
-  border: 1.5px solid #28a745;
+  border: 1.5px solid #05ea81;
+}
+
+input::placeholder {
+  float: right;
+  color: rgb(198, 198, 198);
 }
 
 button {
   padding: 10px;
-  background-color: #28a745;
-  color: white;
+  background-color: #05ea81;
+  color: #514869;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-family: DanaBold;
 }
+
 button:hover, button:focus {
   outline: none;
-  background-color: #28a745;
+  background-color: #514869;
+  color: rgb(198, 198, 198);
 }
 
 p {
   text-align: center;
   margin-top: 15px;
+  color: rgb(198, 198, 198);
 }
 
 a.enter {
-  color: #28a745;
+  color: #05ea81;
   /* font-weight: bold; */
   margin-right: 10px;
   font-family: DanaBold;
