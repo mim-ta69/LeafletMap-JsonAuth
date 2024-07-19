@@ -26,10 +26,19 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+
+    <!-- something newest links added in 7/19/2024 at 4:22 pm -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
     <div id="map">
       <div class="leaflet-control cordinate"></div>
+    </div>
+    <div id="geojson">
+      <textarea
+        id="geojson-content"
+        style="width: 100%; height: 100%"
+      ></textarea>
     </div>
     <button id="exportButton">Export to GeoJSON</button>
   </body>
@@ -214,5 +223,59 @@
         e.latlng.lat + " | " + e.latlng.lng;
       // console.log("lat| " + e.latlng.lat + " lng| " + e.latlng.lng);
     });
+
+    // asghar test
+    // تابع برای به‌روزرسانی نمایش GeoJSON
+    function updateGeoJSON() {
+      var geojsonData = geojsonLayer.toGeoJSON();
+      document.getElementById("geojson-content").value = JSON.stringify(
+        geojsonData,
+        null,
+        2
+      );
+    }
+
+    // رویداد برای اضافه کردن لایه‌های جدید
+    map.on(L.Draw.Event.CREATED, function (event) {
+      var layer = event.layer;
+      geojsonLayer.addLayer(layer);
+      updateGeoJSON();
+    });
+
+    // رویداد برای ویرایش لایه‌های موجود
+    map.on(L.Draw.Event.EDITED, function () {
+      updateGeoJSON();
+    });
+
+    // رویداد برای حذف لایه‌های موجود
+    map.on(L.Draw.Event.DELETED, function () {
+      updateGeoJSON();
+    });
+
+    // رویداد برای انتخاب یک لایه
+    geojsonLayer.on("click", function (e) {
+      var layer = e.layer;
+      var geojsonData = layer.toGeoJSON();
+      document.getElementById("geojson-content").value = JSON.stringify(
+        geojsonData,
+        null,
+        2
+      );
+    });
+
+    // رویداد برای به‌روزرسانی نقشه وقتی داده‌های GeoJSON در textarea تغییر می‌کند
+    $("#geojson-content").on("input", function () {
+      var updatedGeoJSON = $(this).val();
+      try {
+        var parsedData = JSON.parse(updatedGeoJSON);
+        geojsonLayer.clearLayers();
+        geojsonLayer.addData(parsedData);
+      } catch (e) {
+        console.error("Invalid JSON");
+      }
+    });
+
+    // به‌روزرسانی اولیه نمایش GeoJSON
+    updateGeoJSON();
   </script>
 </html>
