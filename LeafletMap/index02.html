@@ -224,7 +224,18 @@
       // console.log("lat| " + e.latlng.lat + " lng| " + e.latlng.lng);
     });
 
-    // asghar test
+    // =============== Show updated GeoJson in textarea 7/19/2024|4:22 pm =============== //
+    // مقداردهی اولیه یک لایه‌ی GeoJSON خالی
+    var geojsonLayer = L.geoJSON().addTo(map);
+
+    // // اضافه کردن کنترل‌های ویرایش به نقشه
+    // var drawControl = new L.Control.Draw({
+    //   edit: {
+    //     featureGroup: geojsonLayer,
+    //   },
+    // });
+    // map.addControl(drawControl);
+
     // تابع برای به‌روزرسانی نمایش GeoJSON
     function updateGeoJSON() {
       var geojsonData = geojsonLayer.toGeoJSON();
